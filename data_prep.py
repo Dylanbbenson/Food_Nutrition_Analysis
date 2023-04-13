@@ -188,13 +188,29 @@ candy = df[df["Name"].str.contains(candy_pattern)]
 candy = candy.sort_values(by='Calories', ascending=False)
 #candy.to_csv('./data/candy.csv')
 
-beverage_keywords = ['BEVERAGE', 'BEV,']
-beverage_pattern = '|'.join(beverage_keywords)
+na_beverage_keywords = ['BEVERAGE', 'BEV,']
+na_beverage_keywords_pattern = '|'.join(na_beverage_keywords)
 
-beverage = df[df["Name"].str.contains(beverage_pattern)]
+not_na_beverage = ['ALCOHOL']
+not_na_beverage_pattern = '|'.join(not_fish)
 
-beverage = beverage.sort_values(by='Calories', ascending=False)
-#beverage.to_csv('./data/beverages.csv')
+na_beverage = df[df["Name"].str.contains(na_beverage_keywords_pattern)]
+na_beverage = na_beverage[~na_beverage["Name"].str.contains(not_na_beverage_pattern)]
+
+na_beverage = na_beverage.sort_values(by='Calories', ascending=False)
+#na_beverage_keywords.to_csv('./data/na_beverage_keywords.csv')
+
+alcoholic_beverage_keywords = ['ALCOHOL']
+alcoholic_beverage_keywords_pattern = '|'.join(alcoholic_beverage_keywords)
+
+not_alcoholic_beverage = ['NON-ALCOHOL']
+not_alcoholic_beverage_pattern = '|'.join(not_fish)
+
+alcoholic_beverage = df[df["Name"].str.contains(alcoholic_beverage_keywords_pattern)]
+alcoholic_beverage = alcoholic_beverage[~alcoholic_beverage["Name"].str.contains(not_alcoholic_beverage_pattern)]
+
+alcoholic_beverage = alcoholic_beverage.sort_values(by='Calories', ascending=False)
+#alcoholic_beverage_keywords.to_csv('./data/alcoholic_beverage_keywords.csv')
 
 dressing_keywords = ['DRSNG']
 dressing_pattern = '|'.join(dressing_keywords)
@@ -449,44 +465,42 @@ snack = snack.sort_values(by='Calories', ascending=False)
 #snack.to_csv('./data/snacks.csv')
 
 
+#########################################################################################################
 
 #Calculate Means
 
-
 milk.loc['9999'] = milk.mean()
-milk.loc['9999', ['Name']] = ['milk_Average']
+milk.loc['9999', ['Name']] = ['milks_average']
 milk.loc['9999', ['id']] = ['99999']
 milk = milk.round(decimals=2)
-milk_average = milk.tail(1)
+milks_average = milk.tail(1)
 
 
 fruit.loc['9999'] = fruit.mean()
-fruit.loc['9999', ['Name']] = ['Fruit_Average']
+fruit.loc['9999', ['Name']] = ['fruits_average']
 fruit.loc['9999', ['id']] = ['99999']
 fruit = fruit.round(decimals=2)
-fruit_average = fruit.tail(1)
+fruits_average = fruit.tail(1)
 
 
 cheese.loc['9999'] = cheese.mean()
-cheese.loc['9999', ['Name']] = ['cheese_Average']
+cheese.loc['9999', ['Name']] = ['cheeses_average']
 cheese.loc['9999', ['id']] = ['99999']
 cheese = cheese.round(decimals=2)
-cheese_average = cheese.tail(1)
+cheeses_average = cheese.tail(1)
 
 
 soup.loc['9999'] = soup.mean()
-soup.loc['9999', ['Name']] = ['soup_Average']
+soup.loc['9999', ['Name']] = ['soups_average']
 soup.loc['9999', ['id']] = ['99999']
 soup = soup.round(decimals=2)
-soup_average = soup.tail(1)
-
+soups_average = soup.tail(1)
 
 cereal.loc['9999'] = cereal.mean()
-cereal.loc['9999', ['Name']] = ['cereal_Average']
+cereal.loc['9999', ['Name']] = ['cereals_average']
 cereal.loc['9999', ['id']] = ['99999']
 cereal = cereal.round(decimals=2)
-cereal_average = cereal.tail(1)
-
+cereals_average = cereal.tail(1)
 
 cookies.loc['9999'] = cookies.mean()
 cookies.loc['9999', ['Name']] = ['cookies_Average']
@@ -496,10 +510,10 @@ cookies_average = cookies.tail(1)
 
 
 babyfood.loc['9999'] = babyfood.mean()
-babyfood.loc['9999', ['Name']] = ['babyfood_Average']
+babyfood.loc['9999', ['Name']] = ['babyfoods_average']
 babyfood.loc['9999', ['id']] = ['99999']
 babyfood = babyfood.round(decimals=2)
-babyfood_average = babyfood.tail(1)
+babyfoods_average = babyfood.tail(1)
 
 
 beans.loc['9999'] = beans.mean()
@@ -517,10 +531,10 @@ rice_average = rice.tail(1)
 
 
 ice_cream.loc['9999'] = ice_cream.mean()
-ice_cream.loc['9999', ['Name']] = ['ice_cream_Average']
+ice_cream.loc['9999', ['Name']] = ['ice_creams_average']
 ice_cream.loc['9999', ['id']] = ['99999']
 ice_cream = ice_cream.round(decimals=2)
-ice_cream_average = ice_cream.tail(1)
+ice_creams_average = ice_cream.tail(1)
 
 
 chips.loc['9999'] = chips.mean()
@@ -552,7 +566,7 @@ school_lunch.loc['9999'] = school_lunch.mean()
 school_lunch.loc['9999', ['Name']] = ['school_lunch_Average']
 school_lunch.loc['9999', ['id']] = ['99999']
 school_lunch = school_lunch.round(decimals=2)
-school_lunch_average = school_lunch.tail(1)
+school_lunches_average = school_lunch.tail(1)
 
 beef.loc['9999'] = beef.mean()
 beef.loc['9999', ['Name']] = ['beef_Average']
@@ -578,38 +592,43 @@ candy.loc['9999', ['id']] = ['99999']
 candy = candy.round(decimals=2)
 candy_average = candy.tail(1)
 
-beverage.loc['9999'] = beverage.mean()
-beverage.loc['9999', ['Name']] = ['beverage_Average']
-beverage.loc['9999', ['id']] = ['99999']
-beverage = beverage.round(decimals=2)
-beverage_average = beverage.tail(1)
+na_beverage.loc['9999'] = na_beverage.mean()
+na_beverage.loc['9999', ['Name']] = ['na_beverages_average']
+na_beverage.loc['9999', ['id']] = ['99999']
+na_beverage = na_beverage.round(decimals=2)
+na_beverages_average = na_beverage.tail(1)
+
+alcoholic_beverage.loc['9999'] = alcoholic_beverage.mean()
+alcoholic_beverage.loc['9999', ['Name']] = ['alcoholic_beverages_average']
+alcoholic_beverage.loc['9999', ['id']] = ['99999']
+alcoholic_beverage = alcoholic_beverage.round(decimals=2)
+alcoholic_beverages_average = alcoholic_beverage.tail(1)
 
 dressing.loc['9999'] = dressing.mean()
-dressing.loc['9999', ['Name']] = ['dressing_Average']
+dressing.loc['9999', ['Name']] = ['dressings_average']
 dressing.loc['9999', ['id']] = ['99999']
 dressing = dressing.round(decimals=2)
-dressing_average = dressing.tail(1)
-
+dressings_average = dressing.tail(1)
 
 egg.loc['9999'] = egg.mean()
-egg.loc['9999', ['Name']] = ['egg_Average']
+egg.loc['9999', ['Name']] = ['eggs_average']
 egg.loc['9999', ['id']] = ['99999']
 egg = egg.round(decimals=2)
-egg_average = egg.tail(1)
+eggs_average = egg.tail(1)
 
 
 yogurt.loc['9999'] = yogurt.mean()
-yogurt.loc['9999', ['Name']] = ['yogurt_Average']
+yogurt.loc['9999', ['Name']] = ['yogurts_average']
 yogurt.loc['9999', ['id']] = ['99999']
 yogurt = yogurt.round(decimals=2)
-yogurt_average = yogurt.tail(1)
+yogurts_average = yogurt.tail(1)
 
 
 oil.loc['9999'] = oil.mean()
-oil.loc['9999', ['Name']] = ['oil_Average']
+oil.loc['9999', ['Name']] = ['oils_average']
 oil.loc['9999', ['id']] = ['99999']
 oil = oil.round(decimals=2)
-oil_average = oil.tail(1)
+oils_average = oil.tail(1)
 
 
 cake.loc['9999'] = cake.mean()
@@ -714,43 +733,43 @@ pudding = pudding.round(decimals=2)
 pudding_average = pudding.tail(1)
 
 soup.loc['9999'] = soup.mean()
-soup.loc['9999', ['Name']] = ['soup_Average']
+soup.loc['9999', ['Name']] = ['soups_average']
 soup.loc['9999', ['id']] = ['99999']
 soup = soup.round(decimals=2)
-soup_average = soup.tail(1)
+soups_average = soup.tail(1)
 
 apple.loc['9999'] = apple.mean()
-apple.loc['9999', ['Name']] = ['apple_Average']
+apple.loc['9999', ['Name']] = ['apples_average']
 apple.loc['9999', ['id']] = ['99999']
 apple = apple.round(decimals=2)
-apple_average = apple.tail(1)
+apples_average = apple.tail(1)
 
 apricot.loc['9999'] = apricot.mean()
-apricot.loc['9999', ['Name']] = ['apricot_Average']
+apricot.loc['9999', ['Name']] = ['apricots_average']
 apricot.loc['9999', ['id']] = ['99999']
 apricot = apricot.round(decimals=2)
-apricot_average = apricot.tail(1)
+apricots_average = apricot.tail(1)
 
 veggie.loc['9999'] = veggie.mean()
-veggie.loc['9999', ['Name']] = ['veggie_Average']
+veggie.loc['9999', ['Name']] = ['veggies_average']
 veggie.loc['9999', ['id']] = ['99999']
 veggie = veggie.round(decimals=2)
-veggie_average = veggie.tail(1)
+veggies_average = veggie.tail(1)
 
 nut.loc['9999'] = nut.mean()
-nut.loc['9999', ['Name']] = ['nuts_Average']
+nut.loc['9999', ['Name']] = ['nuts_average']
 nut.loc['9999', ['id']] = ['99999']
 nut = nut.round(decimals=2)
-nut_average = nut.tail(1)
+nuts_average = nut.tail(1)
 
 chocolate.loc['9999'] = chocolate.mean()
-chocolate.loc['9999', ['Name']] = ['chocolate_Average']
+chocolate.loc['9999', ['Name']] = ['chocolates_Average']
 chocolate.loc['9999', ['id']] = ['99999']
 chocolate = chocolate.round(decimals=2)
-chocolate_average = chocolate.tail(1)
+chocolates_average = chocolate.tail(1)
 
 snack.loc['9999'] = snack.mean()
-snack.loc['9999', ['Name']] = ['chocolate_Average']
+snack.loc['9999', ['Name']] = ['snacks_Average']
 snack.loc['9999', ['id']] = ['99999']
 snack = snack.round(decimals=2)
-snack_average = snack.tail(1)
+snacks_average = snack.tail(1)
