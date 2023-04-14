@@ -11,7 +11,8 @@ df = df.sort_values(by='Shrt_Desc', ascending=True)
 df.to_csv('./data/ABBREV.csv', index=False)
 
 df['Total_Fat_(g)'] = df['FA_Mono_(g)'] + df['FA_Sat_(g)']
-df = df[["NDB_No", "Shrt_Desc", "Energ_Kcal", "Protein_(g)", "Carbohydrt_(g)", "Fiber_TD_(g)", "Sugar_Tot_(g)", "Calcium_(mg)", "Sodium_(mg)", "Total_Fat_(g)"]].copy()
+df['Vitamins_(mcg)'] = df["Vit_K_(µg)"] + df["Vit_E_(mg)"] + df["Vit_D_IU"]
+df = df[["NDB_No", "Shrt_Desc", "Energ_Kcal", "Protein_(g)", "Carbohydrt_(g)", "Fiber_TD_(g)", "Sugar_Tot_(g)", "Calcium_(mg)", "Sodium_(mg)", "Total_Fat_(g)", "Potassium_(mg)", "Water_(g)", 'Vitamins_(mcg)']].copy()
 df = df.rename(columns={'Energ_Kcal':'Calories',  'Shrt_Desc':'Name', 'NDB_No':'id', 'Carbohydrt_(g)':'Carbs_(g)', 'Protein_(g)':'Protein_(g)', 'Fiber_TD_(g)':'Fiber_(g)', 'Sugar_Tot_(g)':'Sugar_(g)', 'Calcium_(mg)':'Calcium_(mg)', 'Sodium_(mg)':'Sodium_(mg)'})
 
 cheese = df[df["Name"].str.startswith("CHEESE,")]
@@ -411,7 +412,7 @@ apricot = apricot.sort_values(by='Calories', ascending=False)
 fruit_keywords = ["APPLE", "ORANGE", "BANANA", "PINEAPPLE", "WATERMELON", "KIWI", "GRAPEFRUIT", "PEAR", "PEACH", "MANGO", "BLUEBERRY", "STRAWBERRY", "CHERRY", "PLUM", "APRICOT", "LEMON,AVOCADO, BLACKBERRY", "LIME", "POMEGRANATE", "CANTALOUPE", "HONEYDEW", "AVOCADO", "BLACKBERRY"]
 fruit_pattern = '|'.join(fruit_keywords)
 
-not_fruit = ['OIL', 'CHIP', 'PORK', 'CANDIES', 'BEVERAGE', 'COOKIE', 'WAFER', 'MUFFIN', 'INF FORM', 'BABYFOOD', 'KELLOGG', 'CEREAL', 'CAKE', 'PUDDING', 'PASTRY', 'TAPIOCA', 'TSTR', 'PIE', 'APPLEBEE', 'SNACK', 'SUGAR', 'YOGURT', 'SUNDAE', 'ICE CREAM', 'SYRUP', 'BREAD']
+not_fruit = ['OIL', 'CHIP', 'PORK', 'CANDIES', 'BEVERAGE', 'COOKIE', 'WAFER', 'MUFFIN', 'INF FORM', 'BABYFOOD', 'KELLOGG', 'CEREAL', 'CAKE', 'PUDDING', 'PASTRY', 'TAPIOCA', 'TSTR', 'PIE', 'APPLEBEE', 'SNACK', 'SUGAR', 'YOGURT', 'SUNDAE', 'ICE CREAM', 'SYRUP', 'BREAD', 'BEV']
 not_fruit_pattern = '|'.join(not_fruit)
 
 fruit = df[df["Name"].str.contains(fruit_pattern)]
@@ -420,7 +421,7 @@ fruit = fruit[~fruit["Name"].str.contains(not_fruit_pattern)]
 fruit = fruit.sort_values(by='Calories', ascending=False)
 #fruit.to_csv('./data/fruits.csv')
 
-veggie_keywords = ["CARROTS," ,"BROCCOLI," ,"CAULIFLOWER," ,"BEETS," ,"CABBAGE," ,"SPINACH," ,"KALE," ,"ZUCCHINI," ,"EGGPLANT," ,"TOMATOES," ,"CUCUMBERS," ,"RADISHES," ,"GARLIC," ,"ONIONS," ,"PEPPERS," ,"MUSHROOMS," ,"ASPARAGUS," ,"SWEET POTATOES," ,"LETTUCE," ,"BRUSSELS SPROUTS"]
+veggie_keywords = ["CARROTS," ,"BROCCOLI," ,"CAULIFLOWER," ,"BEETS," ,"CABBAGE," ,"SPINACH," ,"KALE," ,"ZUCCHINI," ,"EGGPLANT," ,"TOMATOES," ,"CUCUMBERS," ,"RADISHES," ,"GARLIC," ,"ONIONS," ,"PEPPERS," ,"MUSHROOMS," ,"ASPARAGUS," ,"SWEET POTATOES," ,"LETTUCE," ,"BRUSSELS SPROUTS", 'BEV']
 veggie_pattern = '|'.join(veggie_keywords)
 
 not_veggie = ['SOUP', 'OIL', 'CHIP', 'CANDIES', 'BEVERAGE', 'COOKIE', 'WAFER', 'MUFFIN', 'INF FORM', 'BABYFOOD', 'KELLOGG', 'CEREAL', 'CAKE', 'PUDDING', 'PASTRY', 'TAPIOCA', 'TSTR', 'PIE', 'APPLEBEE', 'SNACK', 'SUGAR', 'YOGURT', 'SUNDAE', 'ICE CREAM', 'SYRUP', 'BREAD']
@@ -664,13 +665,6 @@ goose.loc['9999', ['Name']] = ['goose_Average']
 goose.loc['9999', ['id']] = ['99999']
 goose = goose.round(decimals=2)
 goose_average = goose.tail(1)
-
-
-chocolate.loc['9999'] = chocolate.mean()
-chocolate.loc['9999', ['Name']] = ['chocolate_Average']
-chocolate.loc['9999', ['id']] = ['99999']
-chocolate = chocolate.round(decimals=2)
-chocolate_average = chocolate.tail(1)
 
 ostrich.loc['9999'] = ostrich.mean()
 ostrich.loc['9999', ['Name']] = ['ostrich_Average']
