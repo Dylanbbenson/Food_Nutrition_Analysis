@@ -3,17 +3,53 @@ import numpy as np
 
 df = pd.read_csv('./data/ABBREV.csv')
 
-# Convert the "Name" column to uppercase
-df['Shrt_Desc'] = df['Shrt_Desc'].str.upper()
-df = df.sort_values(by='Shrt_Desc', ascending=True)
+df.dropna(subset=['GmWt_1'], inplace=True)
 
-# Write the modified data back to the CSV file
-df.to_csv('./data/ABBREV.csv', index=False)
+cols_to_divide = [col for col in df.columns if 'µg' in col]
+df.loc[:, cols_to_divide] = df.loc[:, cols_to_divide] / 1000
 
-df['Total_Fat_(g)'] = df['FA_Mono_(g)'] + df['FA_Sat_(g)']
-df['Vitamins_(mcg)'] = df["Vit_K_(µg)"] + df["Vit_E_(mg)"] + df["Vit_D_IU"]
-df = df[["NDB_No", "Shrt_Desc", "Energ_Kcal", "Protein_(g)", "Carbohydrt_(g)", "Fiber_TD_(g)", "Sugar_Tot_(g)", "Calcium_(mg)", "Sodium_(mg)", "Total_Fat_(g)", "Potassium_(mg)", "Water_(g)", 'Vitamins_(mcg)']].copy()
-df = df.rename(columns={'Energ_Kcal':'Calories',  'Shrt_Desc':'Name', 'NDB_No':'id', 'Carbohydrt_(g)':'Carbs_(g)', 'Protein_(g)':'Protein_(g)', 'Fiber_TD_(g)':'Fiber_(g)', 'Sugar_Tot_(g)':'Sugar_(g)', 'Calcium_(mg)':'Calcium_(mg)', 'Sodium_(mg)':'Sodium_(mg)'})
+df = df.rename(columns={
+    col: col.replace('µg', 'mg') for col in df.columns
+})
+
+cols_to_divide = [col for col in df.columns if '(g)' in col]
+df.loc[:, cols_to_divide] = df.loc[:, cols_to_divide] * 1000
+
+df = df.rename(columns={
+    col: col.replace('(g)', '(mg)') for col in df.columns
+})
+
+df = df.round(decimals = 1)
+
+df['Total_Fat_(mg)'] = df['FA_Mono_(mg)'] + df['FA_Sat_(mg)']
+df['Vitamins_(mg)'] = df.filter(like='Vit').sum(axis=1)
+
+unhealthy_list = ['Sugar_Tot_(mg)', 'Lipid_Tot_(mg)', 'Cholestrl_(mg)', 'FA_Sat_(mg)']
+df['Unhealthy_Nutrients'] = df[unhealthy_list].sum(axis=1)
+
+healthy_list = ['Water_(mg)', 'Protein_(mg)', 'Fiber_TD_(mg)', 'Calcium_(mg)', 'Iron_(mg)', 'Magnesium_(mg)', 'Phosphorus_(mg)', 'Potassium_(mg)', 'Sodium_(mg)', 'Zinc_(mg)', 'Copper_mg)', 'Manganese_(mg)', 'Selenium_(mg)', 'Thiamin_(mg)', 'Riboflavin_(mg)', 'Niacin_(mg)', 'Folate_Tot_(mg)', 'Folic_Acid_(mg)', 'Food_Folate_(mg)', 'Folate_DFE_(mg)', 'Retinol_(mg)', 'Alpha_Carot_(mg)', 'Beta_Carot_(mg)', 'Beta_Crypt_(mg)', 'Lycopene_(mg)', 'FA_Mono_(mg)', 'FA_Poly_(mg)', 'Vitamins_(mg)']
+
+df['Healthy_Nutrients'] = df[healthy_list].sum(axis=1)
+
+df['Health_Score'] = df['Healthy_Nutrients'] - df['Unhealthy_Nutrients'] / df['GmWt_1']
+df = df[["NDB_No", "Shrt_Desc", "Energ_Kcal", "Protein_(mg)", "Carbohydrt_(mg)", "Fiber_TD_(mg)", "Sugar_Tot_(mg)", "Calcium_(mg)", "Sodium_(mg)", "Total_Fat_(mg)", "Potassium_(mg)", "Water_(mg)", 'Vitamins_(mg)', 'Unhealthy_Nutrients', 'Healthy_Nutrients', 'Health_Score']].copy()
+df = df.rename(columns={'Energ_Kcal':'Calories',  'Shrt_Desc':'Name', 'NDB_No':'id', 'Carbohydrt_(mg)':'Carbs_(mg)', 'Protein_(mg)':'Protein_(mg)', 'Fiber_TD_(mg)':'Fiber_(mg)', 'Sugar_Tot_(mg)':'Sugar_(mg)', 'Calcium_(mg)':'Calcium_(mg)', 'Sodium_(mg)':'Sodium_(mg)'})
+
+
+################################################################################################################
+# Food Groups
+
+water_keywords = ['WATER,']
+water_pattern = '|'.join(water_keywords)
+
+not_water = ['FRESHWATER', 'SUGAR']
+not_water_pattern = '|'.join(not_water)
+
+water = df[df["Name"].str.contains(water_pattern)]
+water = water[~water["Name"].str.contains(not_water_pattern)]
+
+water = water.sort_values(by='Calories', ascending=False)
+#water.to_csv('./data/water.csv')
 
 cheese = df[df["Name"].str.startswith("CHEESE,")]
 cheese = cheese.sort_values(by='Calories', ascending=False)
@@ -145,18 +181,6 @@ school_lunch = df[df["Name"].str.contains(school_lunch_pattern)]
 school_lunch = school_lunch.sort_values(by='Calories', ascending=False)
 #school_lunch.to_csv('./data/school_lunches.csv')
 
-beef_keywords = ['BEEF,', 'BF,']
-beef_pattern = '|'.join(beef_keywords)
-
-not_beef = ['SOUP']
-not_beef_pattern = '|'.join(not_beef)
-
-beef = df[df["Name"].str.contains(beef_pattern)]
-beef = beef[~beef["Name"].str.contains(not_beef_pattern)]
-
-beef = beef.sort_values(by='Calories', ascending=False)
-#beef.to_csv('./data/beef.csv')
-
 bread_keywords = ['BREAD,']
 bread_pattern = '|'.join(bread_keywords)
 
@@ -192,7 +216,7 @@ candy = candy.sort_values(by='Calories', ascending=False)
 na_beverage_keywords = ['BEVERAGE', 'BEV,']
 na_beverage_keywords_pattern = '|'.join(na_beverage_keywords)
 
-not_na_beverage = ['ALCOHOL']
+not_na_beverage = ['ALCOHOL', 'WATER,']
 not_na_beverage_pattern = '|'.join(not_fish)
 
 na_beverage = df[df["Name"].str.contains(na_beverage_keywords_pattern)]
@@ -204,7 +228,7 @@ na_beverage = na_beverage.sort_values(by='Calories', ascending=False)
 alcoholic_beverage_keywords = ['ALCOHOL']
 alcoholic_beverage_keywords_pattern = '|'.join(alcoholic_beverage_keywords)
 
-not_alcoholic_beverage = ['NON-ALCOHOL']
+not_alcoholic_beverage = ['NON-ALCOHOL', 'WATER,']
 not_alcoholic_beverage_pattern = '|'.join(not_fish)
 
 alcoholic_beverage = df[df["Name"].str.contains(alcoholic_beverage_keywords_pattern)]
@@ -321,7 +345,7 @@ ostrich = ostrich[~ostrich["Name"].str.contains(not_ostrich_pattern)]
 ostrich = ostrich.sort_values(by='Calories', ascending=False)
 #ostrich.to_csv('./data/ostrichs.csv')
 
-cow_keywords = ['STEAK,', 'BEEF,']
+cow_keywords = ['STEAK,', 'BEEF,', 'BF,']
 cow_pattern = '|'.join(cow_keywords)
 
 cow = df[df["Name"].str.contains(cow_pattern)]
@@ -470,6 +494,12 @@ snack = snack.sort_values(by='Calories', ascending=False)
 
 #Calculate Means
 
+water.loc['9999'] = water.mean()
+water.loc['9999', ['Name']] = ['water_average']
+water.loc['9999', ['id']] = ['99999']
+water = water.round(decimals=2)
+water_average = water.tail(1)
+
 milk.loc['9999'] = milk.mean()
 milk.loc['9999', ['Name']] = ['milks_average']
 milk.loc['9999', ['id']] = ['99999']
@@ -569,12 +599,6 @@ school_lunch.loc['9999', ['id']] = ['99999']
 school_lunch = school_lunch.round(decimals=2)
 school_lunches_average = school_lunch.tail(1)
 
-beef.loc['9999'] = beef.mean()
-beef.loc['9999', ['Name']] = ['beef_Average']
-beef.loc['9999', ['id']] = ['99999']
-beef = beef.round(decimals=2)
-beef_average = beef.tail(1)
-
 bread.loc['9999'] = bread.mean()
 bread.loc['9999', ['Name']] = ['bread_Average']
 bread.loc['9999', ['id']] = ['99999']
@@ -673,7 +697,7 @@ ostrich = ostrich.round(decimals=2)
 ostrich_average = ostrich.tail(1)
 
 emu.loc['9999'] = emu.mean()
-emu.loc['9999', ['Name']] = ['ostrich_Average']
+emu.loc['9999', ['Name']] = ['emu_Average']
 emu.loc['9999', ['id']] = ['99999']
 emu = emu.round(decimals=2)
 emu_average = emu.tail(1)
