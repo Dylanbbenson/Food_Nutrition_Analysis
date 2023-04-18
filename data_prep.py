@@ -51,9 +51,17 @@ water = water[~water["Name"].str.contains(not_water_pattern)]
 water = water.sort_values(by='Calories', ascending=False)
 #water.to_csv('./data/water.csv')
 
-cheese = df[df["Name"].str.startswith("CHEESE,")]
+cheese_keywords = ['CHEESE,', 'PARMESAN']
+cheese_pattern = '|'.join(cheese_keywords)
+
+not_cheese = ['CRACKERS', 'FAST FOOD', 'PASTA']
+not_cheese_pattern = '|'.join(not_cheese)
+
+cheese = df[df["Name"].str.contains(cheese_pattern)]
+cheese = cheese[~cheese["Name"].str.contains(not_cheese_pattern)]
+
 cheese = cheese.sort_values(by='Calories', ascending=False)
-#cheese.to_csv('./data/cheese.csv')
+cheese.to_csv('./data/cheeses.csv')
 
 milk = df[df["Name"].str.startswith("MILK,")]
 milk = milk.sort_values(by='Calories', ascending=False)
@@ -92,7 +100,7 @@ cookies = cookies.sort_values(by='Calories', ascending=False)
 #cookies.to_csv('./data/cookies.csv')
 
 
-babyfood_keywords = ['BABYFOOD', 'INF FORMULA']
+babyfood_keywords = ['BABYFOOD', 'INF FORMULA', 'INF FORM']
 babyfood_pattern = '|'.join(babyfood_keywords)
 
 babyfood = df[df["Name"].str.contains(babyfood_pattern)]
@@ -100,7 +108,7 @@ babyfood = df[df["Name"].str.contains(babyfood_pattern)]
 babyfood = babyfood.sort_values(by='Calories', ascending=False)
 #babyfood.to_csv('./data/babyfoods.csv')
 
-beans_keywords = ['BEANS']
+beans_keywords = ['BEANS', 'BNS,']
 beans_pattern = '|'.join(beans_keywords)
 
 not_beans = ['CANDIES']
@@ -148,7 +156,11 @@ chips = chips.sort_values(by='Calories', ascending=False)
 pasta_keywords = ['PASTA', 'SPAGHETTI', 'MACARONI']
 pasta_pattern = '|'.join(pasta_keywords)
 
+not_pasta = ['CHINESE']
+not_pasta_pattern = '|'.join(not_pasta)
+
 pasta = df[df["Name"].str.contains(pasta_pattern)]
+pasta = pasta[~pasta["Name"].str.contains(not_pasta_pattern)]
 
 pasta = pasta.sort_values(by='Calories', ascending=False)
 #pasta.to_csv('./data/pasta.csv')
@@ -181,13 +193,10 @@ school_lunch = df[df["Name"].str.contains(school_lunch_pattern)]
 school_lunch = school_lunch.sort_values(by='Calories', ascending=False)
 #school_lunch.to_csv('./data/school_lunches.csv')
 
-bread_keywords = ['BREAD,']
-bread_pattern = '|'.join(bread_keywords)
-
-not_bread = ['SOUP', 'SHORTENING', 'COOKIE', 'PIE', 'CAKE', 'FRIED', 'CRUMBS', 'MIX']
+not_bread = ['SOUP', 'SHORTENING', 'COOKIE', 'PIE', 'CAKE', 'FRIED', 'CRUMBS', 'MIX', 'BANANA']
 not_bread_pattern = '|'.join(not_bread)
 
-bread = df[df["Name"].str.contains(bread_pattern)]
+bread = df[df["Name"].str.startswith('BREAD,')]
 bread = bread[~bread["Name"].str.contains(not_bread_pattern)]
 
 bread = bread.sort_values(by='Calories', ascending=False)
@@ -213,7 +222,7 @@ candy = df[df["Name"].str.contains(candy_pattern)]
 candy = candy.sort_values(by='Calories', ascending=False)
 #candy.to_csv('./data/candy.csv')
 
-na_beverage_keywords = ['BEVERAGE', 'BEV,']
+na_beverage_keywords = ['BEVERAGE', 'BEV,', 'JUC', 'JUICE', 'DRK']
 na_beverage_keywords_pattern = '|'.join(na_beverage_keywords)
 
 not_na_beverage = ['ALCOHOL', 'WATER,']
@@ -237,21 +246,17 @@ alcoholic_beverage = alcoholic_beverage[~alcoholic_beverage["Name"].str.contains
 alcoholic_beverage = alcoholic_beverage.sort_values(by='Calories', ascending=False)
 #alcoholic_beverage_keywords.to_csv('./data/alcoholic_beverage_keywords.csv')
 
-dressing_keywords = ['DRSNG']
+dressing_keywords = ['DRSNG','CATSUP','SAUCE','CONDIMENT', 'DRESSING', "KETCHUP", "MAYONNAISE", "MUSTARD", "HOT SAUCE", "SOY SAUCE", "SRIRACHA", "TARTAR SAUCE", "WORCESTERSHIRE SAUCE", "BARBECUE SAUCE", "HONEY MUSTARD", "THOUSAND ISLAND DRESSING", "AIOLI", "RELISH", "SWEET CHILI SAUCE", "HORSERADISH", "SALSA", "CANE SYRUP", "RANCH DRESSING", "CHIMICHURRI"]
 dressing_pattern = '|'.join(dressing_keywords)
 
+not_dressings = ['OIL', 'SALSA', 'APPLE', 'PIZZA', 'GRNS', 'SPINACH', 'GREENS']
+not_dressings_pattern = '|'.join(not_dressings)
+
 dressing = df[df["Name"].str.contains(dressing_pattern)]
+dressing = dressing[~dressing["Name"].str.contains(not_dressings_pattern)]
 
 dressing = dressing.sort_values(by='Calories', ascending=False)
 #dressing.to_csv('./data/dressings.csv')
-
-egg_keywords = ['EGG,']
-egg_pattern = '|'.join(egg_keywords)
-
-egg = df[df["Name"].str.contains(egg_pattern)]
-
-egg = egg.sort_values(by='Calories', ascending=False)
-#egg.to_csv('./data/eggs.csv')
 
 yogurt_keywords = ['YOGURT,']
 yogurt_pattern = '|'.join(yogurt_keywords)
@@ -369,10 +374,22 @@ lamb = df[df["Name"].str.contains(lamb_pattern)]
 lamb = lamb.sort_values(by='Calories', ascending=False)
 #lamb.to_csv('./data/lambs.csv')
 
+turkey_keywords = ['TURKEY']
+turkey_pattern = '|'.join(turkey_keywords)
+
+not_turkey = ['GRAVY']
+not_turkey_pattern = '|'.join(not_turkey)
+
+turkey = df[df["Name"].str.contains(turkey_pattern)]
+turkey = turkey[~turkey["Name"].str.contains(not_turkey_pattern)]
+
+turkey = turkey.sort_values(by='Calories', ascending=False)
+turkey.to_csv('./data/turkey.csv')
+
 gravy_keywords = ['GRAVY,']
 gravy_pattern = '|'.join(gravy_keywords)
 
-not_gravy = ['SOUP']
+not_gravy = ['SOUP', 'W/ GRAVY', 'W/GRAVY']
 not_gravy_pattern = '|'.join(not_gravy)
 
 gravy = df[df["Name"].str.contains(gravy_pattern)]
@@ -445,7 +462,7 @@ fruit = fruit[~fruit["Name"].str.contains(not_fruit_pattern)]
 fruit = fruit.sort_values(by='Calories', ascending=False)
 #fruit.to_csv('./data/fruits.csv')
 
-veggie_keywords = ["CARROTS," ,"BROCCOLI," ,"CAULIFLOWER," ,"BEETS," ,"CABBAGE," ,"SPINACH," ,"KALE," ,"ZUCCHINI," ,"EGGPLANT," ,"TOMATOES," ,"CUCUMBERS," ,"RADISHES," ,"GARLIC," ,"ONIONS," ,"PEPPERS," ,"MUSHROOMS," ,"ASPARAGUS," ,"SWEET POTATOES," ,"LETTUCE," ,"BRUSSELS SPROUTS", 'BEV']
+veggie_keywords = ["CARROTS," , 'GRNS',"BROCCOLI," ,"CAULIFLOWER," ,"BEETS," ,"CABBAGE," ,"SPINACH," ,"KALE," ,"ZUCCHINI," ,"EGGPLANT," ,"TOMATOES," ,"CUCUMBERS," ,"RADISHES," ,"GARLIC," ,"ONIONS," ,"PEPPERS," ,"MUSHROOMS," ,"ASPARAGUS," ,"SWEET POTATOES," ,"LETTUCE," ,"BRUSSELS SPROUTS", 'BEV']
 veggie_pattern = '|'.join(veggie_keywords)
 
 not_veggie = ['SOUP', 'OIL', 'CHIP', 'CANDIES', 'BEVERAGE', 'COOKIE', 'WAFER', 'MUFFIN', 'INF FORM', 'BABYFOOD', 'KELLOGG', 'CEREAL', 'CAKE', 'PUDDING', 'PASTRY', 'TAPIOCA', 'TSTR', 'PIE', 'APPLEBEE', 'SNACK', 'SUGAR', 'YOGURT', 'SUNDAE', 'ICE CREAM', 'SYRUP', 'BREAD']
@@ -460,14 +477,14 @@ veggie = veggie.sort_values(by='Calories', ascending=False)
 nut_keywords = ["ALMOND", "BRAZIL NUT", "CASHEW", "CHESTNUT", "COCONUT", "FILBERT", "HAZELNUT", "MACADAMIA NUT", "PEANUT", "PECAN", "PINE NUT", "PISTACHIO", "WALNUT", "CHINQUAPIN", "COLA NUT", "WATER CHESTNUT", "BUTTERNUT", "HICKORY NUT", "ACORN", "KOLA NUT"]
 nut_pattern = '|'.join(nut_keywords)
 
-not_nut = ['BUTTER', 'SOUP', 'OIL', 'CHIP', 'CANDIES', 'BEVERAGE', 'COOKIE', 'WAFER', 'MUFFIN', 'INF FORM', 'BABYFOOD', 'KELLOGG', 'CEREAL', 'CAKE', 'PUDDING', 'PASTRY', 'TAPIOCA', 'TSTR', 'PIE', 'APPLEBEE', 'SNACK', 'SUGAR', 'YOGURT', 'SUNDAE', 'ICE CREAM', 'SYRUP', 'BREAD']
+not_nut = ['BUTTER', 'KEEBLER', 'SOUP', 'OIL', 'CHIP', 'COCONUT', 'BEV', 'BAR', 'SPRD', 'CANDIES', 'BEVERAGE', 'COOKIE', 'WAFER', 'MUFFIN', 'INF FORM', 'BABYFOOD', 'KELLOGG', 'CEREAL', 'CAKE', 'PUDDING', 'PASTRY', 'TAPIOCA', 'TSTR', 'PIE', 'APPLEBEE', 'SNACK', 'SUGAR', 'YOGURT', 'SUNDAE', 'ICE CREAM', 'SYRUP', 'BREAD']
 not_nut_pattern = '|'.join(not_nut)
 
 nut = df[df["Name"].str.contains(nut_pattern)]
 nut = nut[~nut["Name"].str.contains(not_nut_pattern)]
 
 nut = nut.sort_values(by='Calories', ascending=False)
-#nut.to_csv('./data/nuts.csv')
+nut.to_csv('./data/nuts.csv')
                    
 chocolate_keywords = ['CHOCOLATE', 'COCOA']
 chocolate_pattern = '|'.join(chocolate_keywords)
@@ -481,7 +498,7 @@ chocolate = chocolate[~chocolate["Name"].str.contains(not_chocolate_pattern)]
 chocolate = chocolate.sort_values(by='Calories', ascending=False)
 #chocolate.to_csv('./data/chocolates.csv')
 
-snack_keywords = ['SNACK']
+snack_keywords = ['SNACK', 'CHIPS', 'CANDIES', 'CANDY', 'POPCORN', 'TRAIL MIX']
 snack_pattern = '|'.join(snack_keywords)
 
 snack = df[df["Name"].str.contains(snack_pattern)]
@@ -489,6 +506,77 @@ snack = df[df["Name"].str.contains(snack_pattern)]
 snack = snack.sort_values(by='Calories', ascending=False)
 #snack.to_csv('./data/snacks.csv')
 
+dessert_keywords = ['DESSERT', 'COCOA', 'COOKIE', 'DOUGHNUT','CAKE', 'PUDDING', 'PASTRY', 'TAPIOCA', 'PIE', 'ICE CREAM', 'SUNDAE', 'WAFER', 'SWEET ROLL', 'CHEESECAKE', 'TIRAMISU', 'TART', 'BROWNIE', 'MOUSSE', 'MERINGUE', 'PIZZELLE']
+dessert_pattern = '|'.join(dessert_keywords)
+
+not_dessert = ['OIL', 'MIX', 'SHORTENING', 'TOPPING', 'FILLING', 'BABYFOOD', 'INF FORMULA', 'INF FORM', 'BARBECUE']
+not_dessert_pattern = '|'.join(not_dessert)
+
+dessert = df[df["Name"].str.contains(dessert_pattern)]
+dessert = dessert[~dessert["Name"].str.contains(not_dessert_pattern)]
+
+dessert = dessert.sort_values(by='Calories', ascending=False)
+#dessert.to_csv('./data/desserts.csv')
+
+seasoning_keywords = ['SEASONING','SALT,', "BASIL", "OREGANO", "THYME", "ROSEMARY", "CUMIN", "CAYENNE PEPPER", "GINGER,", "TURMERIC", "PAPRIKA", "CINNAMON,", "NUTMEG", "FENNEL", "ALLSPICE", "CARDAMOM", "GARLIC POWDER", "ONION POWDER", "CLOVES", "LEMON PEPPER"]
+seasoning_pattern = '|'.join(seasoning_keywords)
+
+not_seasoning = ['OIL', 'BUTTER', 'MARGARINE', 'SAU', 'SAUCE', 'CHIP', 'RICE', 'BEANS', 'TUNA', 'TSTD', 'PIZZA', 'SALMON', 'CORN', 'NO SALT', 'W/ SALT', 'FRZ', 'SMOKED', 'CKD', 'SOUP', 'LO SALT']
+not_seasoning_pattern = '|'.join(not_seasoning)
+
+seasoning = df[df["Name"].str.contains(seasoning_pattern)]
+seasoning = seasoning[~seasoning["Name"].str.contains(not_seasoning_pattern)]
+
+seasoning = seasoning.sort_values(by='Calories', ascending=False)
+seasoning.to_csv('./data/seasonings.csv')
+
+chinese_food_keywords = ['CHINESE', 'CHINA']
+chinese_food_pattern = '|'.join(chinese_food_keywords)
+
+#not_chinese_food = ['OIL', 'BUTTER', 'MARGARINE', 'SAU', 'SAUCE', 'CHIP', 'RICE', 'BEANS', 'TUNA', 'TSTD', 'PIZZA', 'SALMON', 'CORN', 'NO SALT', 'W/ SALT', 'FRZ', 'SMOKED', 'CKD', 'SOUP', 'LO SALT']
+#not_chinese_food_pattern = '|'.join(not_chinese_food)
+
+chinese_food = df[df["Name"].str.contains(chinese_food_pattern)]
+#chinese_food = chinese_food[~chinese_food["Name"].str.contains(not_chinese_food_pattern)]
+
+chinese_food = chinese_food.sort_values(by='Calories', ascending=False)
+chinese_food.to_csv('./data/chinese_foods.csv')
+
+chinese_food_keywords = ['CHINESE', 'CHINA']
+chinese_food_pattern = '|'.join(chinese_food_keywords)
+
+#not_chinese_food = ['OIL', 'BUTTER', 'MARGARINE', 'SAU', 'SAUCE', 'CHIP', 'RICE', 'BEANS', 'TUNA', 'TSTD', 'PIZZA', 'SALMON', 'CORN', 'NO SALT', 'W/ SALT', 'FRZ', 'SMOKED', 'CKD', 'SOUP', 'LO SALT']
+#not_chinese_food_pattern = '|'.join(not_chinese_food)
+
+chinese_food = df[df["Name"].str.contains(chinese_food_pattern)]
+#chinese_food = chinese_food[~chinese_food["Name"].str.contains(not_chinese_food_pattern)]
+
+chinese_food = chinese_food.sort_values(by='Calories', ascending=False)
+chinese_food.to_csv('./data/chinese_foods.csv')
+
+sea_food_keywords = ['SEAFOOD',"LOBSTER", "CRAB", 'CRUSTACEAN',"SHRIMP", "OYSTER,", "CLAM", "MUSSEL", "SCALLOP,", "SQUID", "OCTOPUS", "CRAYFISH", "LOBSTER TAIL", "LANGOUSTINE", "SEA URCHIN", "GEODUCK", "ABALONE", "REDFISH", "SEA CUCUMBER", "SEA SNAIL", "RAZOR CLAM", "SEAWEED"]
+sea_food_pattern = '|'.join(sea_food_keywords)
+
+not_sea_food = ['OIL', 'CRACKERS', 'BEEF', 'FAST FOOD', 'CHOWDER', 'SOUP']
+not_sea_food_pattern = '|'.join(not_sea_food)
+
+sea_food = df[df["Name"].str.contains(sea_food_pattern)]
+sea_food = sea_food[~sea_food["Name"].str.contains(not_sea_food_pattern)]
+
+sea_food = sea_food.sort_values(by='Calories', ascending=False)
+sea_food.to_csv('./data/sea_foods.csv')
+
+frozen_food_keywords = ['FRZ ENTREE', 'FRZ, UNPRE', 'FRZ,UNPRE','FRZ, PREP', 'FRZ,PREP','FROZEN', 'MICROWAVE', ',FRZ', ', FRZ']
+frozen_food_pattern = '|'.join(frozen_food_keywords)
+
+not_frozen_food = ['BEVERAGE', 'CHOPD', 'DRND', 'CAKE', 'PASTRY', 'BERRIES', 'RHUBARB', 'ASPARAGUS', 'BERRY', 'CHERRIES', 'ARTICHOKE', 'BRUSSELS', 'CAULIFLOWER', 'CORN', 'PEAS', 'CONC', 'CARROT', 'BEV,', 'JUC', 'JUICE', 'PREVIOUSLY', 'MICROWAVEABLE', 'MICROWAVED', 'GRNS', 'SQUASH', 'VEGETABLE', 'APPLE', 'TURNIP', 'KALE', 'OKRA']
+not_frozen_food_pattern = '|'.join(not_frozen_food)
+
+frozen_food = df[df["Name"].str.contains(frozen_food_pattern)]
+frozen_food = frozen_food[~frozen_food["Name"].str.contains(not_frozen_food_pattern)]
+
+frozen_food = frozen_food.sort_values(by='Calories', ascending=False)
+#frozen_food.to_csv('./data/frozen_foods.csv')
 
 #########################################################################################################
 
@@ -630,17 +718,10 @@ alcoholic_beverage = alcoholic_beverage.round(decimals=2)
 alcoholic_beverages_average = alcoholic_beverage.tail(1)
 
 dressing.loc['9999'] = dressing.mean()
-dressing.loc['9999', ['Name']] = ['dressings_average']
+dressing.loc['9999', ['Name']] = ['dressings/condiments_average']
 dressing.loc['9999', ['id']] = ['99999']
 dressing = dressing.round(decimals=2)
 dressings_average = dressing.tail(1)
-
-egg.loc['9999'] = egg.mean()
-egg.loc['9999', ['Name']] = ['eggs_average']
-egg.loc['9999', ['id']] = ['99999']
-egg = egg.round(decimals=2)
-eggs_average = egg.tail(1)
-
 
 yogurt.loc['9999'] = yogurt.mean()
 yogurt.loc['9999', ['Name']] = ['yogurts_average']
@@ -791,3 +872,50 @@ snack.loc['9999', ['Name']] = ['snacks_Average']
 snack.loc['9999', ['id']] = ['99999']
 snack = snack.round(decimals=2)
 snacks_average = snack.tail(1)
+
+dessert.loc['9999'] = dessert.mean()
+dessert.loc['9999', ['Name']] = ['dessert_average']
+dessert.loc['9999', ['id']] = ['99999']
+dessert = dessert.round(decimals=2)
+dessert_average = dessert.tail(1)
+
+seasoning.loc['9999'] = seasoning.mean()
+seasoning.loc['9999', ['Name']] = ['seasonings_average']
+seasoning.loc['9999', ['id']] = ['99999']
+seasoning = seasoning.round(decimals=2)
+seasonings_average = seasoning.tail(1)
+
+chinese_food.loc['9999'] = chinese_food.mean()
+chinese_food.loc['9999', ['Name']] = ['chinese_foods_average']
+chinese_food.loc['9999', ['id']] = ['99999']
+chinese_food = chinese_food.round(decimals=2)
+chinese_foods_average = chinese_food.tail(1)
+
+sea_food.loc['9999'] = sea_food.mean()
+sea_food.loc['9999', ['Name']] = ['sea_foods_average']
+sea_food.loc['9999', ['id']] = ['99999']
+sea_food = sea_food.round(decimals=2)
+seafoods_average = sea_food.tail(1)
+
+frozen_food.loc['9999'] = frozen_food.mean()
+frozen_food.loc['9999', ['Name']] = ['frozen_foods_average']
+frozen_food.loc['9999', ['id']] = ['99999']
+frozen_food = frozen_food.round(decimals=2)
+frozen_food_average = frozen_food.tail(1)
+
+turkey.loc['9999'] = turkey.mean()
+turkey.loc['9999', ['Name']] = ['turkeys_average']
+turkey.loc['9999', ['id']] = ['99999']
+turkey = turkey.round(decimals=2)
+turkey_average = turkey.tail(1)
+
+meats_list = [cow_average, turkey_average, pig_average, chicken_average, game_average, lamb_average, veal_average, emu_average, ostrich_average, duck_average, goose_average, fish_average]
+              
+# combine all the dataframes into one using concat
+meat_averages = pd.concat(meats_list, ignore_index=True)
+meat_averages = pd.DataFrame(meat_averages)
+meat_averages.loc['9999'] = meat_averages.mean()
+meat_averages.loc['9999', ['Name']] = ['meat_average']
+meat_averages.loc['9999', ['id']] = ['99999']
+meat_averages = meat_averages.round(decimals=2)
+meat_average = meat_averages.tail(1)
